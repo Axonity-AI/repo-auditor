@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.venv/
+venv/
+env/
+
+# Environment
+.env
+.env.local
+!.env.example
+
+# Data / logs (large or generated)
+data/
+logs/*.log
+!logs/.gitkeep
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Claude Code local machine settings -- not shared project config, and has
+# previously captured a real token via an approved Bash(...) command
+# string (see docs/postmortems/0001-secret-leak-2026-08-06.md and
+# ENGINEERING_STANDARDS.md §5). .claude/agents/ etc. are fine to keep
+# tracked if a project uses shared custom subagents.
+.claude/settings.local.json
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Node (if a frontend/ is added later)
+node_modules/

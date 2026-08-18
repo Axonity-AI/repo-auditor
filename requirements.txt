@@ -1,0 +1,12 @@
+# Runtime dependencies
+fastapi
+uvicorn
+pydantic
+python-dotenv
+
+# Dev/test dependencies
+pytest
+pytest-cov
+ruff
+mypy
+pre-commit

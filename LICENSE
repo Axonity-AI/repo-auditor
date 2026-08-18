@@ -1,0 +1,23 @@
+Copyright (c) {{YEAR}} Axonity Solutions Inc. All Rights Reserved.
+
+This repository and its contents (including all source code, documentation,
+assets, and other materials) are the proprietary and confidential property of
+Axonity Solutions Inc. No part of this repository may be used, copied, modified, merged,
+published, distributed, sublicensed, or sold without the prior written
+permission of Axonity Solutions Inc.
+
+This code is made available in a private repository for internal development,
+client demonstration, and evaluation purposes only. No license, express or
+implied, to any intellectual property rights is granted by viewing or
+accessing this repository.
+
+Unauthorized use, reproduction, or distribution of this software, or any
+portion of it, may result in civil and criminal penalties and will be
+prosecuted to the maximum extent possible under the law.
+
+---
+
+This is the default for Axonity product/company repos (closed-source, commercial IP).
+If a specific project is intentionally being open-sourced, replace this file with an
+MIT (or other OSS) license instead — that should be a deliberate, one-off choice per
+repo, not the default.
