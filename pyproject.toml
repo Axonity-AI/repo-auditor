@@ -1,8 +1,13 @@
 [project]
-name = "repo_auditor"
+name = "{{PACKAGE_NAME}}"
 version = "1.0.0"
-description = "CLI repository auditor that aligns with Axonity engineering standards"
+description = "{{PROJECT_NAME}}"
 requires-python = ">=3.10"
+
+
+[project.scripts]
+repo-auditor = "repo_auditor.cli:main"
+
 
 [tool.ruff]
 line-length = 120
