@@ -3,6 +3,8 @@
 from pathlib import Path
 
 from repo_auditor.checks.codeowners import check_codeowners
+from repo_auditor.checks.license import check_license
+from repo_auditor.checks.security import check_security
 from repo_auditor.models import CheckResult, CheckStatus
 
 
@@ -19,6 +21,8 @@ class RepositoryAuditor:
 
         return [
             check_codeowners(self.repo_path),
+            check_license(self.repo_path),
+            check_security(self.repo_path),
         ]
 
     @staticmethod
