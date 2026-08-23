@@ -17,6 +17,14 @@ def test_cli_passes_when_repository_passes(
         "* @axonity-ai",
         encoding="utf-8",
     )
+    (tmp_path / "LICENSE").write_text(
+        "Proprietary license",
+        encoding="utf-8",
+    )
+    (tmp_path / "SECURITY.md").write_text(
+        "# Security",
+        encoding="utf-8",
+    )
 
     runner = CliRunner()
 
@@ -24,6 +32,8 @@ def test_cli_passes_when_repository_passes(
 
     assert result.exit_code == 0
     assert "[PASS] CODEOWNERS" in result.output
+    assert "[PASS] LICENSE" in result.output
+    assert "[PASS] SECURITY" in result.output
 
 
 def test_cli_fails_when_check_fails(
@@ -48,6 +58,14 @@ def test_cli_supports_json_output(
         "* @axonity-ai",
         encoding="utf-8",
     )
+    (tmp_path / "LICENSE").write_text(
+        "Proprietary license",
+        encoding="utf-8",
+    )
+    (tmp_path / "SECURITY.md").write_text(
+        "# Security",
+        encoding="utf-8",
+    )
 
     runner = CliRunner()
 
@@ -62,3 +80,7 @@ def test_cli_supports_json_output(
 
     assert data[0]["name"] == "CODEOWNERS"
     assert data[0]["status"] == "pass"
+    assert data[1]["name"] == "LICENSE"
+    assert data[1]["status"] == "pass"
+    assert data[2]["name"] == "SECURITY"
+    assert data[2]["status"] == "pass"

@@ -15,7 +15,7 @@ def format_human(results: list[CheckResult]) -> str:
     ]
 
     for result in results:
-        lines.append(f"[{result.status.value.upper()}] " f"{result.name}: {result.message}")
+        lines.append(f"[{result.status.value.upper()}] {result.name}: {result.message}")
 
         if result.details:
             lines.append(f"  Details: {result.details}")
