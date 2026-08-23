@@ -1,4 +1,4 @@
-# Docker Compose for {{PROJECT_NAME}}
+# Docker Compose for repo-auditor
 # Usage: docker compose -f docker/compose.yml up
 
 services:
@@ -6,7 +6,7 @@ services:
     build:
       context: ..
       dockerfile: docker/Dockerfile
-    container_name: "{{PACKAGE_NAME}}"
+    container_name: "repo-auditor"
     ports:
       - "8000:8000"
     env_file:

@@ -1,5 +1,4 @@
-# Contributing to {{PROJECT_NAME}}
-
+# Contributing to Repo Auditor
 This is a proprietary Axonity project (see [LICENSE](LICENSE)). This guide documents the conventions the codebase follows, so they stay consistent as the team grows.
 
 ## Before you start
