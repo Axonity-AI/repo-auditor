@@ -7,4 +7,4 @@ engineering, security, and development standards defined by Axonity.
 """
 
 __version__ = "1.0.0"
-__author__ = "Axonity AI"
+__author__ = "prchS"
