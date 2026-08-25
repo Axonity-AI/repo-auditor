@@ -1,7 +1,9 @@
-# {{PROJECT_NAME}}
+# Repo Auditor
 
 ## Overview
-One paragraph: what this project does and why it exists.
+Repo Auditor is a command-line tool/interface that analyzes software repositories against the engineering, security, and development standards defined by Axonity. It exists to automate repository audits, identify missing or non-compliant configurations, and provide clear feedback that helps maintain consistent and reliable engineering practices across projects.
+
+This repository complements the existing Git/CI checks rather than replacing them. The checks follow the same Axonity engineering standards, but while the CI checks run as part of the pull request workflow, Repo Auditor can be run directly from the CLI at any time. This makes it faster and easier for developers to validate their repositories locally without needing to push changes and open a pull request first, while also making it easier to add and maintain additional checks as Axonity’s standards evolve. The CI checks are still needed as a final automated safeguard to ensure standards are enforced before changes are merged.
 
 ## Quickstart (dev)
 ```bash
@@ -17,7 +19,7 @@ pytest -q
 
 ## Deploy notes
 ```bash
-docker build -t {{PACKAGE_NAME}} -f docker/Dockerfile .
+docker build -t repo_auditor -f docker/Dockerfile .
 docker compose -f docker/compose.yml up
 ```
 
@@ -27,4 +29,5 @@ CI, commit format, ADRs), written assuming no prior experience with any of it.
 [ENGINEERING_STANDARDS.md](ENGINEERING_STANDARDS.md) covers why we work this way.
 
 ## Contacts
-Owner: TBD
+Owner: Axonity AI
+Authors: prchS

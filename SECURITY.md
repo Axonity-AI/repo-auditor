@@ -1,6 +1,6 @@
 # Security Policy
 
-{{PROJECT_NAME}} is proprietary software (see [LICENSE](LICENSE)) developed by Axonity Solutions Inc. This policy applies to this repository and its deployed demo/staging/production instances.
+Repo-auditor is proprietary software (see [LICENSE](LICENSE)) developed by Axonity Solutions Inc. This policy applies to this repository and its deployed demo/staging/production instances.
 
 ## Reporting a Vulnerability
 

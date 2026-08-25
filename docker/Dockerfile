@@ -19,5 +19,5 @@ RUN chown -R appuser:appuser /app
 USER appuser
 
 # TODO: replace with the actual app entrypoint, e.g.:
-#   CMD ["python", "-m", "{{PACKAGE_NAME}}.main"]
-CMD ["python", "-m", "{{PACKAGE_NAME}}"]
+#   CMD ["python", "-m", "repo_auditor.main"]
+CMD ["python", "-m", "repo_auditor.main"]
