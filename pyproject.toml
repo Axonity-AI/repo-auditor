@@ -1,8 +1,13 @@
 [project]
 name = "repo_auditor"
-version = "1.0.0"
+version = "1.1.0"
 description = "CLI repository auditor that aligns with Axonity engineering standards"
 requires-python = ">=3.10"
+
+
+[project.scripts]
+repo-auditor = "repo_auditor.cli:main"
+
 
 [tool.ruff]
 line-length = 120

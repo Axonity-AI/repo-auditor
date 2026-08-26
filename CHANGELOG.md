@@ -6,6 +6,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
 
+
+## [1.1.0] - 2026-08-24
+
+### Added
+
+- Added foundation for CLI and repository audit.
+- Added CODEOWNERS, LICENSE, and SECURITY.md checks.
+- Added human readable and JSON output under output.py.
+- Added tests for the new checks and CLI.
+
+
 ## [1.0.1] - 2026-08-23
 
 ### Added
