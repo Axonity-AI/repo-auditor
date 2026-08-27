@@ -8,6 +8,9 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 
+echo script_dir: "$SCRIPT_DIR"
+echo project_root: "$PROJECT_ROOT"
+
 echo "Installing dependencies..."
 pip install -r "$PROJECT_ROOT/requirements.txt"
 

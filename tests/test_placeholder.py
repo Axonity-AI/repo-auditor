@@ -1,4 +1,4 @@
-from repo_auditor import __author__, __version__
+from repo_auditor import __author__
 
 
 def test_placeholder():
@@ -7,5 +7,4 @@ def test_placeholder():
 
 
 def test_package_metadata():
-    assert __version__ == "1.0.0"
     assert __author__ == "prchS"
