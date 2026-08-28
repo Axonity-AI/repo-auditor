@@ -22,6 +22,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 - Added automated tests covering repository checks, auditing, CLI behavior, and output formatting.
 
+- Added `types-PyYAML` to the mypy pre-commit hook to provide type stubs for YAML parsing and allow the type-checking hook to pass.
+
+- Added `types-PyYAML` and `pyYAML` to requirements.txt as dependencies
+
 
 ## [1.2.0] - 2026-08-27
 
