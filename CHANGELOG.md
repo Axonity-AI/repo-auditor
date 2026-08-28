@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+
+## [1.3.0] - 2026-08-29
+
+### Added
+
+- Added repository audit orchestration for all registered checks.
+
+- Added checks for ADRs, CI workflows, CODEOWNERS, conventional commits, Dependabot, pre-commit, license, and security configuration.
+
+- Added human-readable and JSON audit output.
+
+- Added CLI support for running repository audits.
+
+- Added exit-code handling based on audit results.
+
+- Added automated tests covering repository checks, auditing, CLI behavior, and output formatting.
+
+
 ## [1.2.0] - 2026-08-27
 
 ### Added
