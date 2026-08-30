@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.2.0] - 2026-08-27
+
+### Added
+
+- Added `manage.py`, a script that gives users options to set up the project for development, install Repo Auditor as a CLI, or run the test suite using the appropriate virtual environment.
+- Added `bump_version.py`, a script that supports major, minor, and patch version updates, as well as setting the version to a specific value. It updates the version in `pyproject.toml`, `README.md`, and `CHANGELOG.md`.
+
+### Changed
+
+- docs/ADR to include more information on proposed overhaul of scripts/ and README.md
+- Updated `scripts/run_local.sh` to install a working version of the CLI.
+- Added a script that runs all the tests (`run_tests.sh`).
+- Added a script to automatically update the version number across the repository depending on the change.
+- Centralized the version number to only `pyproject.toml`, and `README.md`.
+
 
 
 ## [1.1.0] - 2026-08-24

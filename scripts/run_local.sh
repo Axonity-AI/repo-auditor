@@ -14,7 +14,10 @@ fi
 source "$VENV_DIR/bin/activate"
 
 echo "Installing dependencies..."
-pip install -q -r "$PROJECT_ROOT/requirements.txt"
+python -m pip install -q -r "$PROJECT_ROOT/requirements.txt"
+
+echo "Installing the project in editable mode as a working CLI..."
+python -m pip install -e .
 
 export PYTHONPATH="$PROJECT_ROOT/src:$PYTHONPATH"
 
@@ -23,7 +26,3 @@ if [ -f "$PROJECT_ROOT/.env" ]; then
 elif [ -f "$PROJECT_ROOT/.env.example" ]; then
     export $(grep -v '^#' "$PROJECT_ROOT/.env.example" | xargs)
 fi
-
-# TODO: replace with the actual app entrypoint, e.g.:
-#   python -m {{PACKAGE_NAME}}.main
-echo "TODO: set the app entrypoint in scripts/run_local.sh"

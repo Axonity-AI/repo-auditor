@@ -1,3 +1,5 @@
+
+
 # ADR 0000: <short title of the decision>
 
 **Status:** Proposed | Accepted | Superseded by ADR-XXXX | Deprecated
