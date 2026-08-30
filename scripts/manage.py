@@ -8,29 +8,35 @@ Usage:
 """
 
 import argparse
-import os
 import platform
+import shutil
 import subprocess
 import sys
 from pathlib import Path
 
+# Get the directory containing this script and the project root.
 SCRIPT_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = SCRIPT_DIR.parent
 
+# Virtual environment used for local development.
 DEV_VENV_DIR = PROJECT_ROOT / ".venv"
-CLI_VENV_DIR = Path.home() / ".repo-auditor"
 
 
 def get_venv_python(venv_dir: Path) -> Path:
     """Return the Python executable for a virtual environment."""
+
+    # Windows stores the Python executable in the Scripts directory.
     if platform.system() == "Windows":
         return venv_dir / "Scripts" / "python.exe"
 
+    # macOS and Linux use the bin directory.
     return venv_dir / "bin" / "python"
 
 
 def run(*args: str) -> None:
     """Run a command and stop if it fails."""
+
+    # check=True causes the script to stop if the command fails.
     subprocess.run(args, check=True)
 
 
@@ -40,13 +46,16 @@ def setup() -> None:
 
     print("Setting up Repo Auditor for development...")
 
+    # Create the development virtual environment if it doesn't exist.
     if not DEV_VENV_DIR.exists():
         print("Creating development virtual environment...")
         run(sys.executable, "-m", "venv", str(DEV_VENV_DIR))
 
+    # Upgrade pip inside the development environment.
     print("Upgrading pip...")
     run(str(python), "-m", "pip", "install", "--upgrade", "pip")
 
+    # Install the project's development dependencies.
     print("Installing development dependencies...")
     run(
         str(python),
@@ -57,6 +66,8 @@ def setup() -> None:
         str(PROJECT_ROOT / "requirements.txt"),
     )
 
+    # Install Repo Auditor in editable mode so source changes are
+    # immediately reflected without reinstalling the package.
     print("Installing Repo Auditor in editable mode...")
     run(
         str(python),
@@ -67,8 +78,11 @@ def setup() -> None:
         str(PROJECT_ROOT),
     )
 
+    # Install the standard pre-commit hook.
     print("Installing pre-commit hooks...")
     run(str(python), "-m", "pre_commit", "install")
+
+    # Install the commit-msg hook used for commit message checks.
     run(
         str(python),
         "-m",
@@ -82,91 +96,33 @@ def setup() -> None:
 
 
 def install() -> None:
-    """Install Repo Auditor into a dedicated global CLI environment."""
-    python = get_venv_python(CLI_VENV_DIR)
+    """Install Repo Auditor as a globally available CLI using pipx."""
 
     print("Installing Repo Auditor as a global CLI...")
 
-    if not CLI_VENV_DIR.exists():
-        print("Creating dedicated CLI environment...")
-        run(sys.executable, "-m", "venv", str(CLI_VENV_DIR))
+    # Check whether pipx is already available on the user's PATH.
+    pipx = shutil.which("pipx")
 
-    print("Installing Repo Auditor...")
-    run(
-        str(python),
-        "-m",
-        "pip",
-        "install",
-        "--upgrade",
-        str(PROJECT_ROOT),
-    )
+    if pipx is None:
+        print("pipx is not installed.")
+        print("Install it with:")
+        print("  python -m pip install pipx")
+        print("\nThen run this command again:")
+        print("  python scripts/manage.py --install")
+        sys.exit(1)
 
-    if platform.system() == "Windows":
-        cli_dir = CLI_VENV_DIR / "Scripts"
-    else:
-        cli_dir = CLI_VENV_DIR / "bin"
-
-    update_path(cli_dir)
+    # pipx creates and manages an isolated virtual environment for
+    # Repo Auditor and handles making the CLI available on PATH.
+    run(pipx, "install", str(PROJECT_ROOT))
 
     print("\nRepo Auditor installed successfully.")
-    print(f"CLI location: {cli_dir}")
-    print("Restart your terminal if the repo-auditor command is not immediately available.")
-
-
-def update_path(cli_dir: Path) -> None:
-    """Add the CLI directory to the user's PATH if necessary."""
-    cli_dir = cli_dir.resolve()
-    cli_dir_str = str(cli_dir)
-
-    current_path = os.environ.get("PATH", "")
-
-    if cli_dir_str in current_path.split(os.pathsep):
-        return
-
-    system = platform.system()
-
-    if system == "Windows":
-        import winreg
-
-        with winreg.OpenKey(
-            winreg.HKEY_CURRENT_USER,
-            "Environment",
-            0,
-            winreg.KEY_READ | winreg.KEY_WRITE,
-        ) as key:
-            try:
-                existing_path, _ = winreg.QueryValueEx(key, "Path")
-            except FileNotFoundError:
-                existing_path = ""
-
-            paths = existing_path.split(";") if existing_path else []
-
-            if cli_dir_str not in paths:
-                paths.append(cli_dir_str)
-                winreg.SetValueEx(
-                    key,
-                    "Path",
-                    0,
-                    winreg.REG_EXPAND_SZ,
-                    ";".join(paths),
-                )
-
-    else:
-        shell_config = Path.home() / ".profile"
-
-        export_line = f'\nexport PATH="$PATH:{cli_dir_str}"\n'
-
-        existing = shell_config.read_text() if shell_config.exists() else ""
-
-        if export_line.strip() not in existing:
-            with shell_config.open("a") as file:
-                file.write(export_line)
 
 
 def test() -> None:
     """Run the test suite using the development virtual environment."""
     python = get_venv_python(DEV_VENV_DIR)
 
+    # Make sure the development environment has been set up first.
     if not python.exists():
         print("Development environment not found.")
         print("Run:")
@@ -174,13 +130,17 @@ def test() -> None:
         sys.exit(1)
 
     print("Running tests...")
+
+    # Run pytest using the project's development environment.
     run(str(python), "-m", "pytest")
 
 
 def main() -> None:
     """Parse command-line arguments."""
+
     parser = argparse.ArgumentParser(description="Manage the Repo Auditor development and CLI environments.")
 
+    # Only one management operation can be selected at a time.
     group = parser.add_mutually_exclusive_group(required=True)
 
     group.add_argument(
@@ -192,7 +152,7 @@ def main() -> None:
     group.add_argument(
         "--install",
         action="store_true",
-        help="Install Repo Auditor as a globally available CLI.",
+        help="Install Repo Auditor as a globally available CLI using pipx.",
     )
 
     group.add_argument(
@@ -203,6 +163,7 @@ def main() -> None:
 
     args = parser.parse_args()
 
+    # Run the function corresponding to the selected command.
     if args.setup:
         setup()
     elif args.install:
@@ -212,4 +173,5 @@ def main() -> None:
 
 
 if __name__ == "__main__":
+    # Start the CLI when this file is executed directly.
     main()

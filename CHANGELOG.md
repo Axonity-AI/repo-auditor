@@ -20,9 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - Added a script to automatically update the version number across the repository depending on the change.
 - Centralized the version number to only `pyproject.toml`, and `README.md`.
 
-### Removed
 
-- Deleted redundant branches that had already been merged into `main`.
 
 ## [1.1.0] - 2026-08-24
 
