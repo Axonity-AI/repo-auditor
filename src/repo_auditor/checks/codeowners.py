@@ -1,4 +1,19 @@
-"""CODEOWNERS audit check."""
+"""CODEOWNERS audit check
+
+CODEOWNERS configuration check.
+
+This module verifies that the repository contains a non-empty CODEOWNERS
+file.
+
+The CODEOWNERS file defines the users or teams responsible for reviewing
+changes to files in the repository.
+
+The check passes when CODEOWNERS exists as a regular file and contains
+content.
+
+The check fails when the file is missing, empty, or when the expected
+path is not a regular file.
+"""
 
 from pathlib import Path
 

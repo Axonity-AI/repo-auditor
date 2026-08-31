@@ -1,4 +1,22 @@
-"""Check for pre-commit configuration."""
+"""Check for pre-commit configuration
+
+Pre-commit configuration check.
+
+This module verifies that the repository contains a valid
+`.pre-commit-config.yaml` configuration file.
+
+Pre-commit provides automated checks that run before changes are
+committed, helping enforce repository standards consistently across
+developers and environments.
+
+The check reads the configuration as YAML and verifies that it is a valid
+structured configuration.
+
+The check passes when the configuration file exists and contains valid
+YAML.
+
+The check fails when the file is missing or contains invalid YAML.
+"""
 
 from pathlib import Path
 

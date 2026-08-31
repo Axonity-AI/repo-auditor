@@ -6,6 +6,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
 
+## [1.4.0] - 2026-08-31
+
+### Added
+
+- Added CI gate check to ensure required quality and security commands cannot silently pass with `continue-on-error`.
+- Added lint gate check to verify that CI runs Ruff.
+- Added secret scanning check to verify that CI runs Gitleaks.
+- Added test gate check to verify that CI runs a supported test command such as `pytest`, `npm test`, or `npm run test`.
+- Added type-check gate check to verify that CI runs Mypy or TypeScript compiler (`tsc`).
+- Added comprehensive unit tests for all five new checks, including missing workflow directories, invalid workflows, unsupported workflow structures, and valid configurations.
+- Added test coverage for the expanded audit and CLI behavior.
+
+
 ## [1.3.0] - 2026-08-29
 
 ### Added
