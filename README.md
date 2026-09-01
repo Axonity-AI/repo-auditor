@@ -1,5 +1,5 @@
 # Repo Auditor
-version = "1.2.0"
+version = "1.3.0"
 
 ## Overview
 Repo Auditor is a command-line tool/interface that analyzes software repositories against the engineering, security, and development standards defined by Axonity. It exists to automate repository audits, identify missing or non-compliant configurations, and provide clear feedback that helps maintain consistent and reliable engineering practices across projects.

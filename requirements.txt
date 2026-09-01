@@ -3,10 +3,11 @@ fastapi
 uvicorn
 pydantic
 python-dotenv
-
+PyYAML
 # Dev/test dependencies
 pytest
 pytest-cov
 ruff
 mypy
 pre-commit
+types-PyYAML

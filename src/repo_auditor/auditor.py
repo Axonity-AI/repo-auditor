@@ -2,8 +2,13 @@
 
 from pathlib import Path
 
+from repo_auditor.checks.adrs import check_adrs
+from repo_auditor.checks.ci_exists import check_ci_exists
 from repo_auditor.checks.codeowners import check_codeowners
+from repo_auditor.checks.conventional_commits import check_conventional_commits
+from repo_auditor.checks.dependabot import check_dependabot
 from repo_auditor.checks.license import check_license
+from repo_auditor.checks.pre_commit import check_pre_commit
 from repo_auditor.checks.security import check_security
 from repo_auditor.models import CheckResult, CheckStatus
 
@@ -23,6 +28,11 @@ class RepositoryAuditor:
             check_codeowners(self.repo_path),
             check_license(self.repo_path),
             check_security(self.repo_path),
+            check_dependabot(self.repo_path),
+            check_ci_exists(self.repo_path),
+            check_pre_commit(self.repo_path),
+            check_conventional_commits(self.repo_path),
+            check_adrs(self.repo_path),
         ]
 
     @staticmethod
