@@ -225,8 +225,8 @@ jobs:
     assert result.status == CheckStatus.PASS
 
 
-def test_gates_detects_gate_commands_in_job_text(tmp_path: Path) -> None:
-    """Gates detect a gate command anywhere in the job definition."""
+def test_gates_ignores_gate_commands_outside_run_steps(tmp_path: Path) -> None:
+    """Gate-like text in job environment values does not count as execution."""
 
     workflows = tmp_path / ".github" / "workflows"
     workflows.mkdir(parents=True)
@@ -270,6 +270,30 @@ jobs:
       - run: tsc --noEmit
       - run: npm test
       - run: npm run test
+""",
+        encoding="utf-8",
+    )
+
+    result = check_gates(tmp_path)
+
+    assert result.status == CheckStatus.PASS
+
+
+def test_gates_does_not_treat_decorative_command_as_gate(tmp_path: Path) -> None:
+    """A gate command mentioned in a job name should not count as a gate."""
+    workflows_dir = tmp_path / ".github" / "workflows"
+    workflows_dir.mkdir(parents=True)
+
+    (workflows_dir / "ci.yml").write_text(
+        """
+name: CI
+
+jobs:
+  test:
+    name: Run pytest checks
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "hello"
 """,
         encoding="utf-8",
     )

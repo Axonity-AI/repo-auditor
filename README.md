@@ -59,6 +59,10 @@ Run the test suite:
 
 ### Global CLI Installation
 
+First, install pipx as its a dependency
+
+    pip install pipx
+
 To install Repo Auditor as a globally available CLI:
 
     python scripts/manage.py --install

@@ -68,11 +68,19 @@ def check_gates(repo_path: Path) -> CheckResult:
             if not isinstance(job, dict):
                 continue
 
-            job_text = str(job)
+            steps = job.get("steps", [])
+            if not isinstance(steps, list):
+                continue
 
-            contains_gate = any(command in job_text for command in _GATE_COMMANDS)
+            gate_steps = [
+                step
+                for step in steps
+                if isinstance(step, dict)
+                and isinstance(step.get("run"), str)
+                and any(command in step["run"] for command in _GATE_COMMANDS)
+            ]
 
-            if not contains_gate:
+            if not gate_steps:
                 continue
 
             if job.get("continue-on-error") is True:
@@ -82,22 +90,13 @@ def check_gates(repo_path: Path) -> CheckResult:
                     message=f"Job '{job_name}' uses continue-on-error.",
                 )
 
-            steps = job.get("steps", [])
-            if not isinstance(steps, list):
-                continue
-
-            for step in steps:
-                if not isinstance(step, dict):
-                    continue
-
+            for step in gate_steps:
                 if step.get("continue-on-error") is True:
-                    run = step.get("run", "")
-                    if isinstance(run, str) and any(command in run for command in _GATE_COMMANDS):
-                        return CheckResult(
-                            name="gates",
-                            status=CheckStatus.FAIL,
-                            message=(f"Gate step in job '{job_name}' uses continue-on-error."),
-                        )
+                    return CheckResult(
+                        name="gates",
+                        status=CheckStatus.FAIL,
+                        message=(f"Gate step in job '{job_name}' uses continue-on-error."),
+                    )
 
     return CheckResult(
         name="gates",

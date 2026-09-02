@@ -5,6 +5,7 @@ description = "CLI repository auditor that aligns with Axonity engineering stand
 requires-python = ">=3.10"
 
 
+
 [project.scripts]
 repo-auditor = "repo_auditor.cli:main"
 

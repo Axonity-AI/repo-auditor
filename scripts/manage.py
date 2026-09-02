@@ -114,6 +114,13 @@ def install() -> None:
     # pipx creates and manages an isolated virtual environment for
     # Repo Auditor and handles making the CLI available on PATH.
     run(pipx, "install", str(PROJECT_ROOT))
+    run(
+        pipx,
+        "inject",
+        "repo_auditor",
+        "--requirement",
+        str(PROJECT_ROOT / "requirements.txt"),
+    )
 
     print("\nRepo Auditor installed successfully.")
 
