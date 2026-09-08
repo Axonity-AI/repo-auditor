@@ -1,5 +1,5 @@
 """
-manage.py - Cross-platform management utility for Repo Auditor.
+Development environment management script.
 
 Usage:
     python scripts/manage.py --setup
@@ -8,158 +8,192 @@ Usage:
 """
 
 import argparse
-import platform
-import shutil
 import subprocess
 import sys
 from pathlib import Path
 
-# Get the directory containing this script and the project root.
+# Directory containing this script.
 SCRIPT_DIR = Path(__file__).resolve().parent
-PROJECT_ROOT = SCRIPT_DIR.parent
 
-# Virtual environment used for local development.
-DEV_VENV_DIR = PROJECT_ROOT / ".venv"
+# Root directory of the Repo Auditor source code.
+SOURCE_ROOT = SCRIPT_DIR.parent
 
+# Directory where the development virtual environment will be created.
+# This uses the directory where the current terminal is located.
+DEV_VENV_DIR = Path.cwd() / ".venv"
 
-def get_venv_python(venv_dir: Path) -> Path:
-    """Return the Python executable for a virtual environment."""
-
-    # Windows stores the Python executable in the Scripts directory.
-    if platform.system() == "Windows":
-        return venv_dir / "Scripts" / "python.exe"
-
-    # macOS and Linux use the bin directory.
-    return venv_dir / "bin" / "python"
+REQUIREMENTS_FILE = SOURCE_ROOT / "requirements.txt"
 
 
-def run(*args: str) -> None:
+def run_command(command: list[str], cwd: Path | None = None) -> None:
     """Run a command and stop if it fails."""
-
-    # check=True causes the script to stop if the command fails.
-    subprocess.run(args, check=True)
+    print(f"\n> {' '.join(command)}")
+    subprocess.run(command, cwd=cwd, check=True)
 
 
 def setup() -> None:
-    """Set up Repo Auditor for local development."""
-    python = get_venv_python(DEV_VENV_DIR)
+    """Create and configure the development environment."""
+    print(f"Setting up development environment in: {DEV_VENV_DIR}")
 
-    print("Setting up Repo Auditor for development...")
-
-    # Create the development virtual environment if it doesn't exist.
+    # Create the virtual environment in the current terminal directory.
     if not DEV_VENV_DIR.exists():
-        print("Creating development virtual environment...")
-        run(sys.executable, "-m", "venv", str(DEV_VENV_DIR))
+        print("Creating virtual environment...")
+        run_command([sys.executable, "-m", "venv", str(DEV_VENV_DIR)])
+    else:
+        print("Virtual environment already exists.")
 
-    # Upgrade pip inside the development environment.
+    # Select the Python executable inside the new virtual environment.
+    if sys.platform == "win32":
+        venv_python = DEV_VENV_DIR / "Scripts" / "python.exe"
+    else:
+        venv_python = DEV_VENV_DIR / "bin" / "python"
+
+    if not venv_python.exists():
+        raise RuntimeError(f"Could not find virtual environment Python at {venv_python}")
+
+    # Upgrade pip.
     print("Upgrading pip...")
-    run(str(python), "-m", "pip", "install", "--upgrade", "pip")
+    run_command([str(venv_python), "-m", "pip", "install", "--upgrade", "pip"])
 
-    # Install the project's development dependencies.
-    print("Installing development dependencies...")
-    run(
-        str(python),
-        "-m",
-        "pip",
-        "install",
-        "-r",
-        str(PROJECT_ROOT / "requirements.txt"),
-    )
+    # Install project requirements.
+    if REQUIREMENTS_FILE.exists():
+        print("Installing requirements...")
+        run_command(
+            [
+                str(venv_python),
+                "-m",
+                "pip",
+                "install",
+                "-r",
+                str(REQUIREMENTS_FILE),
+            ]
+        )
+    else:
+        print(f"Warning: {REQUIREMENTS_FILE} was not found.")
 
-    # Install Repo Auditor in editable mode so source changes are
-    # immediately reflected without reinstalling the package.
+    # Install Repo Auditor in editable mode.
     print("Installing Repo Auditor in editable mode...")
-    run(
-        str(python),
-        "-m",
-        "pip",
-        "install",
-        "-e",
-        str(PROJECT_ROOT),
+    run_command(
+        [
+            str(venv_python),
+            "-m",
+            "pip",
+            "install",
+            "-e",
+            str(SOURCE_ROOT),
+        ]
     )
 
-    # Install the standard pre-commit hook.
+    # Install pre-commit hooks.
     print("Installing pre-commit hooks...")
-    run(str(python), "-m", "pre_commit", "install")
-
-    # Install the commit-msg hook used for commit message checks.
-    run(
-        str(python),
-        "-m",
-        "pre_commit",
-        "install",
-        "--hook-type",
-        "commit-msg",
+    run_command(
+        [
+            str(venv_python),
+            "-m",
+            "pre_commit",
+            "install",
+        ],
+        cwd=SOURCE_ROOT,
     )
 
-    print("\nDevelopment setup complete.")
+    # Install commit-msg hook if supported by the repository.
+    commit_msg_config = SOURCE_ROOT / ".pre-commit-config.yaml"
+
+    if commit_msg_config.exists():
+        print("Installing commit-msg hook...")
+        run_command(
+            [
+                str(venv_python),
+                "-m",
+                "pre_commit",
+                "install",
+                "--hook-type",
+                "commit-msg",
+            ],
+            cwd=SOURCE_ROOT,
+        )
+
+    print("\nDevelopment environment setup complete.")
+    print(f"Virtual environment: {DEV_VENV_DIR}")
 
 
 def install() -> None:
-    """Install Repo Auditor as a globally available CLI using pipx."""
+    """Install Repo Auditor globally using pipx."""
+    print("Checking for pipx...")
 
-    print("Installing Repo Auditor as a global CLI...")
+    try:
+        subprocess.run(
+            ["pipx", "--version"],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+    except (FileNotFoundError, subprocess.CalledProcessError):
+        print("pipx is not installed or is not available in PATH.\nInstall pipx first, then run this command again.")
 
-    # Check whether pipx is already available on the user's PATH.
-    pipx = shutil.which("pipx")
+    print("Installing Repo Auditor with pipx...")
 
-    if pipx is None:
-        print("pipx is not installed.")
-        print("Install it with:")
-        print("  python -m pip install pipx")
-        print("\nThen run this command again:")
-        print("  python scripts/manage.py --install")
-        sys.exit(1)
-
-    # pipx creates and manages an isolated virtual environment for
-    # Repo Auditor and handles making the CLI available on PATH.
-    run(pipx, "install", str(PROJECT_ROOT))
-    run(
-        pipx,
-        "inject",
-        "repo_auditor",
-        "--requirement",
-        str(PROJECT_ROOT / "requirements.txt"),
+    run_command(
+        [
+            "pipx",
+            "install",
+            str(SOURCE_ROOT),
+        ]
     )
+
+    if REQUIREMENTS_FILE.exists():
+        print("Injecting project requirements...")
+        run_command(
+            [
+                "pipx",
+                "inject",
+                "repo-auditor",
+                "--requirement",
+                str(REQUIREMENTS_FILE),
+            ]
+        )
 
     print("\nRepo Auditor installed successfully.")
 
 
 def test() -> None:
-    """Run the test suite using the development virtual environment."""
-    python = get_venv_python(DEV_VENV_DIR)
+    """Run the project's test suite using the development environment."""
+    if sys.platform == "win32":
+        venv_python = DEV_VENV_DIR / "Scripts" / "python.exe"
+    else:
+        venv_python = DEV_VENV_DIR / "bin" / "python"
 
-    # Make sure the development environment has been set up first.
-    if not python.exists():
-        print("Development environment not found.")
-        print("Run:")
-        print("  python scripts/manage.py --setup")
-        sys.exit(1)
+    if not venv_python.exists():
+        print("Development environment not found.\nRun '--setup' first.")
+        return
 
     print("Running tests...")
-
-    # Run pytest using the project's development environment.
-    run(str(python), "-m", "pytest")
+    run_command(
+        [
+            str(venv_python),
+            "-m",
+            "pytest",
+        ],
+        cwd=SOURCE_ROOT,
+    )
 
 
 def main() -> None:
-    """Parse command-line arguments."""
+    """Parse command-line arguments and run the selected action."""
+    parser = argparse.ArgumentParser(description="Manage the Repo Auditor development environment.")
 
-    parser = argparse.ArgumentParser(description="Manage the Repo Auditor development and CLI environments.")
-
-    # Only one management operation can be selected at a time.
     group = parser.add_mutually_exclusive_group(required=True)
 
     group.add_argument(
         "--setup",
         action="store_true",
-        help="Set up Repo Auditor for development.",
+        help="Create and configure the development environment.",
     )
 
     group.add_argument(
         "--install",
         action="store_true",
-        help="Install Repo Auditor as a globally available CLI using pipx.",
+        help="Install Repo Auditor globally using pipx.",
     )
 
     group.add_argument(
@@ -170,7 +204,6 @@ def main() -> None:
 
     args = parser.parse_args()
 
-    # Run the function corresponding to the selected command.
     if args.setup:
         setup()
     elif args.install:
@@ -180,5 +213,4 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    # Start the CLI when this file is executed directly.
     main()

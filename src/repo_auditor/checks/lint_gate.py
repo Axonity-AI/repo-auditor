@@ -2,23 +2,21 @@
 CI lint gate check.
 
 This module inspects GitHub Actions workflow files and verifies that the
-repository's CI configuration includes a Ruff linting command.
-
-Ruff is treated as the project's lint gate. A workflow passes this check
-when any job contains a step that runs Ruff.
+repository's CI configuration includes a linting process.
 
 The check only examines YAML workflow files under `.github/workflows`.
 Invalid YAML, unrelated files, malformed workflow structures, and steps
 that do not contain executable commands are ignored.
 
 The check fails when the workflows directory is missing or when no valid
-workflow contains a Ruff command.
+workflow contains a linting command.
 """
 
 from pathlib import Path
 
 import yaml
 
+from repo_auditor.checks._process_gate import has_process_command
 from repo_auditor.models import CheckResult, CheckStatus
 
 
@@ -48,7 +46,7 @@ def check_lint_gate(repo_path: Path) -> CheckResult:
         if not isinstance(jobs, dict):
             continue
 
-        for job in jobs.values():
+        for job_name, job in jobs.items():
             if not isinstance(job, dict):
                 continue
 
@@ -60,16 +58,22 @@ def check_lint_gate(repo_path: Path) -> CheckResult:
                 if not isinstance(step, dict):
                     continue
 
-                run = step.get("run", "")
-                if isinstance(run, str) and "ruff" in run:
+                run = step.get("run")
+                step_name = step.get("name", "")
+                if isinstance(run, str) and has_process_command(
+                    run,
+                    "lint",
+                    job_name=str(job_name),
+                    step_name=step_name if isinstance(step_name, str) else "",
+                ):
                     return CheckResult(
                         name="lint-gate",
                         status=CheckStatus.PASS,
-                        message="CI includes a Ruff lint gate.",
+                        message="CI includes a linting gate.",
                     )
 
     return CheckResult(
         name="lint-gate",
         status=CheckStatus.FAIL,
-        message="No CI workflow runs Ruff.",
+        message="No CI workflow performs linting.",
     )

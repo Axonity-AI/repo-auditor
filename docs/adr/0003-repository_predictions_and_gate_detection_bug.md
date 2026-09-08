@@ -13,6 +13,26 @@ Predictions were made before running Repo Auditor against the four Axonity repos
 - **visual_search_ranking:** Predicted to fail the lint and type-check gates because it uses different tooling. The workflow currently uses flake8, black, and isort, with plans to migrate to Ruff.
 - **repo-auditor:** Predicted to pass all checks because it follows the Axonity engineering standards.
 
+
+Actual results
+
+- project-template
+
+![](../images/project-template.png)
+
+- axonity_chatbot
+
+![](../images/axonity_chatbot.png)
+
+- visual_search_ranking
+
+![](../images/visual_search_ranking.png)
+
+- repo-auditor
+
+![](../images/repo-auditor.png)
+
+
 The original gate detection searched the entire GitHub Actions job for commands such as `pytest`, `ruff`, `mypy`, `tsc`, and `gitleaks`.
 
 This could cause false positives when a gate command appeared in a job name or environment variable without actually being executed.

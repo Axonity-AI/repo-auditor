@@ -6,6 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
 
+## [1.5.0] - 2026-09-09
+
+### Changed
+
+- Updated CI lint and test gate detection to identify the underlying process being executed rather than relying on specific tools such as Ruff or pytest.
+- Added shared process detection logic for common testing and linting commands, including project scripts and Make targets.
+- Prevented false positives from job names, step names, shell output, package installation commands, and unrelated build commands.
+- Expanded test gate coverage for equivalent testing processes, invalid workflow structures, and false-positive scenarios.
+- Added dedicated unit tests for the shared process gate helper.
+
 ## [1.4.0] - 2026-08-31
 
 ### Added
