@@ -33,6 +33,8 @@ Actual results
 ![](../images/repo-auditor.png)
 
 
+
+
 The original gate detection searched the entire GitHub Actions job for commands such as `pytest`, `ruff`, `mypy`, `tsc`, and `gitleaks`.
 
 This could cause false positives when a gate command appeared in a job name or environment variable without actually being executed.

@@ -18,6 +18,34 @@ We will use a shared process-based detection helper in `_process_gate.py` for li
 
 The helper inspects executable commands from GitHub Actions `run` steps and recognizes common patterns for testing and linting, including direct tools, package scripts, Make targets, Python modules, and project scripts. Job names and step names will not be treated as evidence that a process is being executed.
 
+
+
+Updated repo-auditor running against the other repositories.
+
+
+
+- project-template
+
+![](../images/project-template_updated.png)
+
+
+- axonity_chatbot
+
+![](../images/axonity_chatbot_updated.png)
+
+
+- visual_search_ranking
+
+![](../images/visual_search_ranking_updated.png)
+
+
+- repo-auditor
+
+![](../images/repo-auditor_updated.png)
+
+
+
+
 ## Alternatives considered
 
 - **Hardcoded tool detection** — rejected because it requires specific tools such as Ruff or pytest and can incorrectly fail repositories that use equivalent tooling.
