@@ -1,4 +1,17 @@
-"""ADR repository check."""
+"""Architecture Decision Records (ADR) repository check.
+
+This module verifies that the repository contains an ADR directory at
+`docs/adr` and that the directory contains at least one Markdown ADR.
+
+ADR files document important architectural decisions, their context,
+and the reasoning behind them.
+
+The check passes when the ADR directory exists and contains one or more
+Markdown files. Non-Markdown files are ignored.
+
+The check fails when the ADR directory is missing or contains no
+Markdown files.
+"""
 
 from pathlib import Path
 

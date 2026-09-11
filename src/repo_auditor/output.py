@@ -1,4 +1,20 @@
-"""Audit result formatting."""
+"""
+Audit result output formatting.
+
+This module converts repository audit results into formats suitable for
+displaying to users or consuming by other tools.
+
+The human formatter produces readable terminal output containing each
+check's status, message, optional details, and a summary of passed,
+failed, and warning checks.
+
+The JSON formatter produces structured output containing the same result
+information, making it suitable for scripts, CI systems, and other
+automated consumers.
+
+Both formatters operate on the shared CheckResult model so that output
+formatting remains separate from the audit and check implementations.
+"""
 
 import json
 

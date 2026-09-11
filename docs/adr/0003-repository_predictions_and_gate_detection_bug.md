@@ -1,0 +1,58 @@
+# ADR 0003: Repository Predictions and Gate Detection Bug Fix
+
+**Status:** Accepted
+
+**Date:** 2026-09-03
+
+## Context
+
+Predictions were made before running Repo Auditor against the four Axonity repositories:
+
+- **project-template:** Predicted to pass all checks because it follows the Axonity engineering standards.
+- **axonity_chatbot:** Predicted to fail all checks because it does not follow the required standard format.
+- **visual_search_ranking:** Predicted to fail the lint and type-check gates because it uses different tooling. The workflow currently uses flake8, black, and isort, with plans to migrate to Ruff.
+- **repo-auditor:** Predicted to pass all checks because it follows the Axonity engineering standards.
+
+
+Actual results
+
+- project-template
+
+![](../images/project-template.png)
+
+- axonity_chatbot
+
+![](../images/axonity_chatbot.png)
+
+- visual_search_ranking
+
+![](../images/visual_search_ranking.png)
+
+- repo-auditor
+
+![](../images/repo-auditor.png)
+
+
+
+
+The original gate detection searched the entire GitHub Actions job for commands such as `pytest`, `ruff`, `mypy`, `tsc`, and `gitleaks`.
+
+This could cause false positives when a gate command appeared in a job name or environment variable without actually being executed.
+
+## Decision
+
+- Gate detection will only check the `run` field of workflow steps.
+- `continue-on-error: true` will only be checked when a supported gate command is actually executed.
+- Decorative references to gate commands will not be treated as gates.
+
+## Alternatives considered
+
+- **Search the entire job:** Rejected because non-executable fields can contain gate commands.
+- **Search job names:** Rejected because job names do not show what is actually executed.
+- **Require exact command matching:** Rejected because commands can contain arguments or additional shell syntax.
+
+## Consequences
+
+- Gate detection now checks actual executed commands.
+- False positives from decorative text are reduced.
+- Unsupported or unusual command forms may not be detected.

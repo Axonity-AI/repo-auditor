@@ -1,4 +1,20 @@
-"""Check that the repository has a non-empty SECURITY.md file."""
+"""Check that the repository has a non-empty SECURITY.md file.
+
+
+Security policy documentation check.
+
+This module verifies that the repository contains a non-empty
+`SECURITY.md` file.
+
+The security policy provides a documented location and process for
+reporting security vulnerabilities and handling security-related issues.
+
+The check passes when SECURITY.md exists as a regular file and contains
+content.
+
+The check fails when the file is missing, empty, or when the expected
+path is not a regular file.
+"""
 
 from pathlib import Path
 

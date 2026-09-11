@@ -6,6 +6,30 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
 
+## [1.5.0] - 2026-09-09
+
+### Changed
+
+- Updated CI lint and test gate detection to identify the underlying process being executed rather than relying on specific tools such as Ruff or pytest.
+- Added shared process detection logic for common testing and linting commands, including project scripts and Make targets.
+- Prevented false positives from job names, step names, shell output, package installation commands, and unrelated build commands.
+- Expanded test gate coverage for equivalent testing processes, invalid workflow structures, and false-positive scenarios.
+- Added dedicated unit tests for the shared process gate helper.
+- Updated CI gate detection to use shared process-based command detection.
+
+## [1.4.0] - 2026-08-31
+
+### Added
+
+- Added CI gate check to ensure required quality and security commands cannot silently pass with `continue-on-error`.
+- Added lint gate check to verify that CI runs Ruff.
+- Added secret scanning check to verify that CI runs Gitleaks.
+- Added test gate check to verify that CI runs a supported test command such as `pytest`, `npm test`, or `npm run test`.
+- Added type-check gate check to verify that CI runs Mypy or TypeScript compiler (`tsc`).
+- Added comprehensive unit tests for all five new checks, including missing workflow directories, invalid workflows, unsupported workflow structures, and valid configurations.
+- Added test coverage for the expanded audit and CLI behavior.
+
+
 ## [1.3.0] - 2026-08-29
 
 ### Added

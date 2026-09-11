@@ -1,4 +1,19 @@
-"""Check that the repository has a non-empty LICENSE file."""
+"""Check that the repository has a non-empty LICENSE file
+
+License file check.
+
+This module verifies that the repository contains a non-empty LICENSE
+file.
+
+The license identifies the legal terms under which the repository's
+software and source code can be used, modified, and distributed.
+
+The check passes when LICENSE exists as a regular file and contains
+content.
+
+The check fails when the file is missing, empty, or when the expected
+path is not a regular file.
+"""
 
 from pathlib import Path
 
