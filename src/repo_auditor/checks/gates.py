@@ -5,14 +5,8 @@ This module inspects GitHub Actions workflow files and verifies that
 important quality and security commands are configured as blocking gates.
 
 A gate is considered protected when a workflow runs one of the supported
-commands without allowing the job or individual gate step to continue
+processes without allowing the job or individual gate step to continue
 after a failure.
-
-The check currently recognizes:
-- gitleaks for secret scanning
-- ruff for linting
-- mypy and tsc for type checking
-- pytest and npm test commands for testing
 
 The check fails when a recognized gate uses `continue-on-error: true`,
 because this allows the workflow to succeed even when the gate fails.
@@ -25,17 +19,8 @@ from pathlib import Path
 
 import yaml
 
+from repo_auditor.checks._process_gate import has_process_command
 from repo_auditor.models import CheckResult, CheckStatus
-
-_GATE_COMMANDS = (
-    "gitleaks",
-    "ruff",
-    "mypy",
-    "tsc",
-    "pytest",
-    "npm test",
-    "npm run test",
-)
 
 
 def check_gates(repo_path: Path) -> CheckResult:
@@ -75,9 +60,24 @@ def check_gates(repo_path: Path) -> CheckResult:
             gate_steps = [
                 step
                 for step in steps
-                if isinstance(step, dict)
-                and isinstance(step.get("run"), str)
-                and any(command in step["run"] for command in _GATE_COMMANDS)
+                if (
+                    isinstance(step, dict)
+                    and isinstance(step.get("run"), str)
+                    and any(
+                        has_process_command(
+                            step["run"],
+                            gate_type,
+                            job_name=str(job_name),
+                            step_name=str(step.get("name") or ""),
+                        )
+                        for gate_type in (
+                            "lint",
+                            "typecheck",
+                            "test",
+                            "security",
+                        )
+                    )
+                )
             ]
 
             if not gate_steps:

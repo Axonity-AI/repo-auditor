@@ -125,6 +125,8 @@ def has_process_command(
                 "eslint",
                 "stylelint",
                 "biome",
+                "black",
+                "isort",
             }:
                 return True
 

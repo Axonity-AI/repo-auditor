@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - Prevented false positives from job names, step names, shell output, package installation commands, and unrelated build commands.
 - Expanded test gate coverage for equivalent testing processes, invalid workflow structures, and false-positive scenarios.
 - Added dedicated unit tests for the shared process gate helper.
+- Updated CI gate detection to use shared process-based command detection.
 
 ## [1.4.0] - 2026-08-31
 
