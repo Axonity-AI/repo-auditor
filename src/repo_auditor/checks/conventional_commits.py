@@ -1,4 +1,20 @@
-"""Conventional Commits repository check."""
+"""Conventional Commits repository check
+
+Conventional Commits configuration check.
+
+This module verifies that the repository's pre-commit configuration
+contains the Conventional Commits hook and that the hook runs during
+the commit-msg stage.
+
+The check reads `.pre-commit-config.yaml` and inspects its configured
+repositories and hooks.
+
+Invalid YAML and missing or incorrectly configured Conventional Commits
+hooks cause the check to fail.
+
+The check passes when the required conventional-pre-commit hook is
+configured for the commit-msg stage.
+"""
 
 from pathlib import Path
 

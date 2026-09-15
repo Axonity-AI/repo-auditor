@@ -1,4 +1,17 @@
-"""Command-line interface for repo-auditor."""
+"""Command-line interface for repo-auditor
+
+
+
+This module provides the user-facing CLI for running repository audits.
+
+The CLI accepts a repository path, runs the RepositoryAuditor, and
+displays the resulting check statuses using either human-readable or
+JSON output.
+
+The process exits with the status returned by the auditor so that the
+CLI can be used directly in local development and automated CI
+environments.
+"""
 
 from pathlib import Path
 

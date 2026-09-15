@@ -1,4 +1,20 @@
-"""CI repository check."""
+"""CI repository check
+
+Continuous Integration (CI) workflow check.
+
+This module verifies that the repository contains at least one valid
+GitHub Actions workflow with a configured job.
+
+Workflow files are read from `.github/workflows` and only YAML workflow
+files are inspected.
+
+Invalid YAML and workflows without jobs are ignored so that other valid
+workflow files can still be evaluated.
+
+The check passes when at least one valid workflow contains a job.
+It fails when the workflows directory is missing or no valid workflow
+contains a job.
+"""
 
 from pathlib import Path
 

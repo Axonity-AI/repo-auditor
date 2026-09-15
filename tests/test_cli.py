@@ -15,10 +15,12 @@ def create_valid_repository(repo_path: Path) -> None:
         "* @axonity-ai",
         encoding="utf-8",
     )
+
     (repo_path / "LICENSE").write_text(
         "Proprietary license",
         encoding="utf-8",
     )
+
     (repo_path / "SECURITY.md").write_text(
         "# Security",
         encoding="utf-8",
@@ -49,10 +51,25 @@ on:
   pull_request:
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - run: ruff check .
+
+  typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - run: mypy src
+
   test:
     runs-on: ubuntu-latest
     steps:
       - run: pytest
+
+  security:
+    runs-on: ubuntu-latest
+    steps:
+      - run: gitleaks detect --no-banner
 """,
         encoding="utf-8",
     )
@@ -70,6 +87,18 @@ repos:
     hooks:
       - id: conventional-pre-commit
         stages: [commit-msg]
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.6.9
+    hooks:
+      - id: ruff
+      - id: ruff-format
+
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.13.0
+    hooks:
+      - id: mypy
+        files: ^src/
 """,
         encoding="utf-8",
     )
@@ -131,7 +160,7 @@ def test_cli_supports_json_output(
 
     data = json.loads(result.output)
 
-    assert len(data) == 8
+    assert len(data) == 13
 
     assert data[0]["name"] == "CODEOWNERS"
     assert data[0]["status"] == "pass"

@@ -1,4 +1,22 @@
-"""Dependabot repository check."""
+"""Dependabot repository check
+
+Dependabot configuration check.
+
+This module verifies that Dependabot is configured to maintain the
+repository's dependencies.
+
+The configuration is read from `.github/dependabot.yml`.
+
+The check verifies that the configuration contains dependency update
+entries and that each required update configuration specifies a package
+ecosystem.
+
+Invalid YAML, missing configuration, missing updates, or missing package
+ecosystem information cause the check to fail.
+
+The check passes when a valid Dependabot configuration contains at least
+one dependency update configuration with a package ecosystem.
+"""
 
 from pathlib import Path
 
